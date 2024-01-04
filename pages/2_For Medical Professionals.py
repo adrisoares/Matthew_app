@@ -37,28 +37,25 @@ content_2 = """
 st.write(content_2, unsafe_allow_html=True)
 
 
-#### MODEL HERE #### Used a file path, but for presentation i'm just using a single shot
-default_file_path = "c:\Armazenamento\yolov5-master\data\img"
 
-# Loading YOLOv5 model from the specified path
+#### MODEL HERE ####
 model_path = "C:/Armazenamento/yolov5-master/runs/train/exp36/weights/last.pt"
 model = torch.hub.load('ultralytics/yolov5', 'custom', path=model_path, force_reload=True)
 
-# Inference on an image
+# Image Inference
 def run_model(image_np):
     results = model(image_np)
     return results
 
-# one single image for inference
+# Load the "unseen.png" image (just for demo). Ideally, this would be a path
 image_path = "Unseen_data.png"
 image = Image.open(image_path)
 image_np = np.array(image)
 
-# Display image
+# Display the  image
 st.image(image, caption='Uploaded Image', use_column_width=True)
 
 if st.button("Run Model"):
-    # Rrun the model
     results = run_model(image_np)
     
     st.success("Model has been run successfully!")
