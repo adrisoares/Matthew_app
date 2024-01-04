@@ -36,9 +36,10 @@ content_2 = """
 """
 st.write(content_2, unsafe_allow_html=True)
 
-
-
 #### MODEL HERE ####
+default_file_path = "c:\Armazenamento\yolov5-master\data\img"
+
+# Loading YOLOv5 model from the specified path
 model_path = "C:/Armazenamento/yolov5-master/runs/train/exp36/weights/last.pt"
 model = torch.hub.load('ultralytics/yolov5', 'custom', path=model_path, force_reload=True)
 

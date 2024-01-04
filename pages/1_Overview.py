@@ -35,21 +35,7 @@ st.write("""
          """)
 st.markdown("---") # Separator line
 
-#### Number of x-rays ##### u can download the data here
-#feat = pd.read_csv("C:\Armazenamento\Imagens\Data_Entry_2017.csv")
-#def label_function(x):
-#    for label in ["No Finding"]:
-#        if label in x:
-#            return label
-#    return "Suspicious"
-#feat_presentation = feat["Finding Labels"].apply(label_function)
-#data = feat_presentation.value_counts()
-
 col1, col2, col3 = st.columns([1,1.6,0.7])
-#fig, ax = plt.subplots(figsize=(4, 2))
-#data.plot(kind='bar', ax=ax, color=['#7E587E', 'tan', 'lightpink'])
-#ax.set_ylabel('Number of Findings')
-#ax.set_title('Chest X-Ray distribution')
 col1.write("""
 """)
 col1.image("X_Ray_distribution.jpg", width=400)
