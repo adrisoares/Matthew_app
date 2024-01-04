@@ -37,40 +37,34 @@ content_2 = """
 st.write(content_2, unsafe_allow_html=True)
 
 
-#### MODEL HERE ####
+#### MODEL HERE #### Used a file path, but for presentation i'm just using a single shot
 default_file_path = "c:\Armazenamento\yolov5-master\data\img"
 
 # Loading YOLOv5 model from the specified path
 model_path = "C:/Armazenamento/yolov5-master/runs/train/exp36/weights/last.pt"
 model = torch.hub.load('ultralytics/yolov5', 'custom', path=model_path, force_reload=True)
 
-# This is the function to perform inference on an image
+# Inference on an image
 def run_model(image_np):
-    results = model(image_np)  # Assuming model is a YOLOv5 model
+    results = model(image_np)
     return results
 
-# Streamlit app
-uploaded_files = st.file_uploader("Choose a Chest X-Ray", type=["jpg", "jpeg", "png"], key="file_uploader", accept_multiple_files=True, help="You can upload multiple images.")
+# one single image for inference
+image_path = "Unseen_data.png"
+image = Image.open(image_path)
+image_np = np.array(image)
 
-if uploaded_files:
-    try:
-        for uploaded_file in uploaded_files:
-            image = Image.open(uploaded_file)
-            image_np = np.array(image)
+# Display image
+st.image(image, caption='Uploaded Image', use_column_width=True)
 
-            st.image(image, caption='Uploaded Image', use_column_width=True)
-
-        if st.button("Run Model"):
-            # Convert image to YOLOv5 expected format and run the model
-            results = run_model(image_np)
-            
-            st.success("Model has been run successfully!")
-            st.subheader("Detection Results:")
-            st.image(np.squeeze(results.render()), use_column_width=True)
-            st.image("recall.png")
-    except Exception as e:
-        st.write(f"An error occurred: {e}")
-
+if st.button("Run Model"):
+    # Rrun the model
+    results = run_model(image_np)
+    
+    st.success("Model has been run successfully!")
+    st.subheader("Detection Results:")
+    st.image(np.squeeze(results.render()), use_column_width=True)
+    st.image("recall.png")
 #### MODEL HERE ####
 
 st.markdown("---") # Separator line
