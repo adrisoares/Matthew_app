@@ -49,7 +49,7 @@ col4.write("""
     </div>
 """, unsafe_allow_html=True)
 
-col5.image("https://healthitanalytics.com/images/site/article_headers/_normal/Getty_correct_size_AI_lung.jpg")
+col5.image("pulmaojpg.jpg")
 
 col3.image("https://cdn.statcdn.com/LandingPages/9e7ed43ebb74d5c6d173f8e93140b610.png")
 st.write("---") 
