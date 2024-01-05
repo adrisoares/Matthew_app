@@ -66,7 +66,7 @@ sample_image_np = np.array("Unseen_data.png")
 # Button to trigger model inference
 if st.button("Run Model on Sample Image"):
     # Run the YOLOv5 model with custom parameters
-    im0 = run_yolov5(sample_image_np, conf_thres=0.25, weights='runs/train/exp36/weights/last.pt')
+    im0 = run_yolov5("Unseen_data.png", conf_thres=0.25, weights='runs/train/exp36/weights/last.pt')
 
     # Display the uploaded image
     st.image(sample_image, caption='Sample Image', use_column_width=True)
