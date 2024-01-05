@@ -8,6 +8,7 @@ import subprocess
 import sys
 from PIL import Image
 import cv2
+import tqdm
 
 st.set_page_config(
     page_title="For Medical Professionals",
@@ -39,12 +40,18 @@ content_2 = """
 """
 st.write(content_2, unsafe_allow_html=True)
 
-#### For the Model in the CLOUD ####
+#### version 726382 #####
+import streamlit as st
+import torch
+import numpy as np
+import cv2
+from PIL import Image
 
-#### For the Model in the CLOUD ####
-def run_yolov5(image_np, conf_thres=0.25, weights='runs/train/exp36/weights/last.pt'):
+# Function to run YOLOv5 model
+def run_yolov5(image_np, conf_thres=0.25, weights='yolov5s.pt'):
     # Load the YOLOv5 model
-    model = torch.hub.load('ultralytics/yolov5:v5.0', 'custom', path=weights, force_reload=True)
+    model = torch.hub.load('ultralytics/yolov5:v5.0', 'yolov5s', path=weights, pretrained=False, force_reload=True)
+    model.eval()
     
     # Run the YOLOv5 model
     results = model(image_np, conf_thres=conf_thres)
@@ -52,24 +59,21 @@ def run_yolov5(image_np, conf_thres=0.25, weights='runs/train/exp36/weights/last
 
     return im0
 
-# Function to convert file buffer to cv2 image
-def create_opencv_image_from_stringio(img_stream, cv2_img_flag=1):
-    img_stream.seek(0)
-    img_array = np.asarray(bytearray(img_stream.read()), dtype=np.uint8)
-    return cv2.imdecode(img_array, cv2_img_flag)
-
 # Sample image path (modify this to your sample image)
-st.image("Unseen_data.png")
-sample_image = Image.open("Unseen_data.png")
-sample_image_np = np.array("Unseen_data.png")
+sample_image_path = "Unseen_data.png"
+sample_image = Image.open(sample_image_path)
+sample_image_np = np.array(sample_image)
+
+# Streamlit app
+st.title('YOLOv5 Inference on Streamlit Cloud')
+
+# Display the uploaded image
+st.image(sample_image, caption='Sample Image', use_column_width=True)
 
 # Button to trigger model inference
 if st.button("Run Model on Sample Image"):
     # Run the YOLOv5 model with custom parameters
-    im0 = run_yolov5("Unseen_data.png", conf_thres=0.25, weights='runs/train/exp36/weights/last.pt')
-
-    # Display the uploaded image
-    st.image(sample_image, caption='Sample Image', use_column_width=True)
+    im0 = run_yolov5(sample_image_np, conf_thres=0.25, weights='yolov5s.pt')
 
     # Display the model results
     if im0 is not None:
@@ -79,53 +83,6 @@ if st.button("Run Model on Sample Image"):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-def run_yolov5(image_np, conf_thres=0.25, weights='runs/train/exp36/weights/last.pt'):
-    # Load the YOLOv5 model
-    model = torch.hub.load('ultralytics/yolov5:v5.0', 'custom', path=weights, force_reload=True)
-    
-    # Run the YOLOv5 model
-    results = model(image_np, conf_thres=conf_thres)
-    im0 = results.render()[0]
-
-    return im0
-
-# Function to convert file buffer to cv2 image
-def create_opencv_image_from_stringio(img_stream, cv2_img_flag=1):
-    img_stream.seek(0)
-    img_array = np.asarray(bytearray(img_stream.read()), dtype=np.uint8)
-    return cv2.imdecode(img_array, cv2_img_flag)
-
-# File uploader for a single image
-img_file = st.file_uploader(label="Load a chest X-Ray", type=['png', 'jpg', 'jpeg'])
-
-if img_file:
-    # Convert file buffer to cv2 image
-    open_cv_image = create_opencv_image_from_stringio(img_file)
-
-    # Run the YOLOv5 model with custom parameters
-    im0 = run_yolov5(open_cv_image, conf_thres=0.25, weights='runs/train/exp36/weights/last.pt')
-
-    # Display the uploaded image
-    st.image(open_cv_image, caption='Uploaded Image', use_column_width=True)
-
-    # Display the model results
-    if im0 is not None:
-        st.image(im0, channels="BGR", caption="Detection Results")
 
 
 ########
