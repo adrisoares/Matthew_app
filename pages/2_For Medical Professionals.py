@@ -40,42 +40,40 @@ content_2 = """
 st.write(content_2, unsafe_allow_html=True)
 
 #### For the Model in the CLOUD ####
+def run_yolov5(image_np, conf_thres=0.25, weights='runs/train/exp36/weights/last.pt'):
+    # Load the YOLOv5 model
+    model = torch.hub.load('ultralytics/yolov5:v5.0', 'custom', path=weights, force_reload=True)
+    
+    # Run the YOLOv5 model
+    results = model(image_np, conf_thres=conf_thres)
+    im0 = results.render()[0]
 
-model_path = "C:/Armazenamento/yolov5-master/runs/train/exp36/weights/last.pt"
-model = torch.hub.load('ultralytics/yolov5', 'custom', path=model_path, force_reload=True)
+    return im0
 
-# Running model on an image
-def run_model(image_np):
-    results = model(image_np)
-    return results
-
-# File buffer to cv2 image
+# Function to convert file buffer to cv2 image
 def create_opencv_image_from_stringio(img_stream, cv2_img_flag=1):
     img_stream.seek(0)
     img_array = np.asarray(bytearray(img_stream.read()), dtype=np.uint8)
     return cv2.imdecode(img_array, cv2_img_flag)
 
-# File uploader for a single image - Just for the demo
-img_file = st.file_uploader(label="Load Unseen_data.png",
-                             type=['png', 'jpg', 'jpeg'])
+# File uploader for a single image
+img_file = st.file_uploader(label="Load a chest X-Ray", type=['png', 'jpg', 'jpeg'])
 
 if img_file:
+    # Convert file buffer to cv2 image
     open_cv_image = create_opencv_image_from_stringio(img_file)
 
-    # Display
+    # Run the YOLOv5 model with custom parameters
+    im0 = run_yolov5(open_cv_image, conf_thres=0.25, weights='runs/train/exp36/weights/last.pt')
+
+    # Display the uploaded image
     st.image(open_cv_image, caption='Uploaded Image', use_column_width=True)
 
-    if st.button("Run Model"):
-        try:
-            results = run_model(open_cv_image)
+    # Display the model results
+    if im0 is not None:
+        st.image(im0, channels="BGR", caption="Detection Results")
 
-            # Display the results
-            st.success("Model has been run successfully!")
-            st.subheader("Detection Results:")
-            st.image(np.squeeze(results.render()), use_column_width=True)
-            st.image("recall.png")  
-        except Exception as e:
-            st.write(f"An error occurred: {e}")
+
 ########
     
 st.markdown("---") # Separator line
