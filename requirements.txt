@@ -6,3 +6,4 @@ streamlit==1.29.0
 torch==2.1.1
 opencv-python-headless
 tqdm==4.62.2
+tensorboard>=2.4.1

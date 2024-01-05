@@ -40,6 +40,60 @@ content_2 = """
 st.write(content_2, unsafe_allow_html=True)
 
 #### For the Model in the CLOUD ####
+
+#### For the Model in the CLOUD ####
+def run_yolov5(image_np, conf_thres=0.25, weights='runs/train/exp36/weights/last.pt'):
+    # Load the YOLOv5 model
+    model = torch.hub.load('ultralytics/yolov5:v5.0', 'custom', path=weights, force_reload=True)
+    
+    # Run the YOLOv5 model
+    results = model(image_np, conf_thres=conf_thres)
+    im0 = results.render()[0]
+
+    return im0
+
+# Function to convert file buffer to cv2 image
+def create_opencv_image_from_stringio(img_stream, cv2_img_flag=1):
+    img_stream.seek(0)
+    img_array = np.asarray(bytearray(img_stream.read()), dtype=np.uint8)
+    return cv2.imdecode(img_array, cv2_img_flag)
+
+# Sample image path (modify this to your sample image)
+st.image("Unseen_data.png")
+sample_image = Image.open("Unseen_data.png")
+sample_image_np = np.array("Unseen_data.png")
+
+# Button to trigger model inference
+if st.button("Run Model on Sample Image"):
+    # Run the YOLOv5 model with custom parameters
+    im0 = run_yolov5(sample_image_np, conf_thres=0.25, weights='runs/train/exp36/weights/last.pt')
+
+    # Display the uploaded image
+    st.image(sample_image, caption='Sample Image', use_column_width=True)
+
+    # Display the model results
+    if im0 is not None:
+        st.image(im0, channels="BGR", caption="Detection Results")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 def run_yolov5(image_np, conf_thres=0.25, weights='runs/train/exp36/weights/last.pt'):
     # Load the YOLOv5 model
     model = torch.hub.load('ultralytics/yolov5:v5.0', 'custom', path=weights, force_reload=True)
