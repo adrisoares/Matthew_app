@@ -39,42 +39,28 @@ content_2 = """
 """
 st.write(content_2, unsafe_allow_html=True)
 
-#### version 726382 #####
-import streamlit as st
-import torch
-import numpy as np
-import cv2
-from PIL import Image
-
-# Function to run YOLOv5 model
+#Yolo
 def run_yolov5(image_np, conf_thres=0.25, weights='yolov5s.pt'):
-    # Load the YOLOv5 model
     model = torch.hub.load('ultralytics/yolov5:v5.0', 'yolov5s', path=weights, pretrained=False, force_reload=True)
     model.eval()
     
-    # Run the YOLOv5 model
+    # Run my model
     results = model(image_np, conf_thres=conf_thres)
     im0 = results.render()[0]
-
     return im0
 
-# Sample image path (modify this to your sample image)
+# Sample image path (modify this to your sample image, just for the demo)
 sample_image_path = "Unseen_data.png"
 sample_image = Image.open(sample_image_path)
 sample_image_np = np.array(sample_image)
 
-# Streamlit app
-st.title('YOLOv5 Inference on Streamlit Cloud')
-
-# Display the uploaded image
+# The image used for demo
 st.image(sample_image, caption='Sample Image', use_column_width=True)
 
-# Button to trigger model inference
+# Button - my favorite stuff in st
 if st.button("Run Model on Sample Image"):
-    # Run the YOLOv5 model with custom parameters
     im0 = run_yolov5(sample_image_np, conf_thres=0.25, weights='yolov5s.pt')
-
-    # Display the model results
+    
     if im0 is not None:
         st.image(im0, channels="BGR", caption="Detection Results")
 
