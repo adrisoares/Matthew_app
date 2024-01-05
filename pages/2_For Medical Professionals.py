@@ -8,7 +8,6 @@ import subprocess
 import sys
 from PIL import Image
 import cv2
-import tqdm
 
 st.set_page_config(
     page_title="For Medical Professionals",
@@ -78,12 +77,6 @@ if st.button("Run Model on Sample Image"):
     # Display the model results
     if im0 is not None:
         st.image(im0, channels="BGR", caption="Detection Results")
-
-
-
-
-
-
 
 ########
     
